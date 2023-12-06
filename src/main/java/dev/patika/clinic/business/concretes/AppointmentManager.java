@@ -29,7 +29,8 @@ public class AppointmentManager implements IAppointmentService {
 
     @Override
     public Appointment getById(Long id) {
-        return this.appointmentRepo.findById(id).orElseThrow();
+        return this.appointmentRepo.findById(id).orElseThrow(()->
+        new RuntimeException(id + " id'li randevu bulunamadı."));
     }
 
     @Override
@@ -37,7 +38,10 @@ public class AppointmentManager implements IAppointmentService {
         LocalDateTime dateTime = appointment.getDateTime();
         Integer doctorId = Math.toIntExact(appointment.getDoctor().getId());
 
-        List<AvailableDate> availableDateList = availableDateRepo.findByDoctorIdAndDate(doctorId, dateTime.toLocalDate());
+        List<AvailableDate> availableDateList= availableDateRepo.findByDoctorIdAndDate(doctorId, dateTime.toLocalDate());
+        if(availableDateList != null && isAvailableDateExistOnDate(doctorId, dateTime.toLocalDate())) {
+            throw new RuntimeException("Doktorun bugün de müsait günü yoktur.");
+        }
         if(availableDateList != null && isAppointmentExistOnDate(doctorId, dateTime)) {
             throw new RuntimeException("Girilen saatte başka bir randevu mevcuttur.");
         } else {
@@ -48,16 +52,25 @@ public class AppointmentManager implements IAppointmentService {
     private boolean isAppointmentExistOnDate(Integer doctorId, LocalDateTime dateTime) {
         return appointmentRepo.existsByDoctorIdAndDateTime(doctorId, dateTime);
     }
+    private boolean isAvailableDateExistOnDate(Integer doctorId, LocalDate date) {
+        return !availableDateRepo.existsByDoctorIdAndDate(doctorId,date);
+    }
 
     @Override
-    public Appointment update(Appointment appointment) {
+    public Appointment update(Long id,Appointment appointment) {
+        Optional<Appointment> appointmentFromDb = appointmentRepo.findById(id);
+
+        if(appointmentFromDb.isEmpty()) {
+            throw new RuntimeException(id + "Güncellemeye çalıştığınız randevu sistemde bulunamadı!");
+        }
+        appointment.setId(id);
         return this.appointmentRepo.save(appointment);
     }
 
     @Override
     public void delete(Long id) {
         Appointment ap = appointmentRepo.findById(id).orElseThrow(() ->
-                new RuntimeException(id + " id'li hayvan bulunamadı!"));
+                new RuntimeException(id + " id'li randevu sistemde bulunamadı!"));
         this.appointmentRepo.delete(this.getById(id));
     }
 

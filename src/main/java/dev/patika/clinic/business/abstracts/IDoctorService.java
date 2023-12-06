@@ -8,7 +8,7 @@ public interface IDoctorService {
 
     Doctor save(Doctor doctor);
 
-    Doctor update(Doctor doctor);
+    Doctor update(Long id,Doctor doctor);
 
     void delete(Long id);
 

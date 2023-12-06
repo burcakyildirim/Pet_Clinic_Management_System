@@ -17,7 +17,6 @@ public class CustomerController {
     private final ICustomerService customerService;
     @Autowired
     private CustomerRepo customerRepo;
-    private Object ResponseEntity;
 
     @Autowired
     public CustomerController(ICustomerService customerService) {
@@ -36,10 +35,10 @@ public class CustomerController {
         return this.customerService.save(customer);
     }
 
-    @PutMapping("/customers")
+    @PutMapping("/customers/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Customer update(@RequestBody Customer customer) {
-        return this.customerService.update(customer);
+    public Customer update(@PathVariable Long id, @RequestBody Customer customer) {
+        return this.customerService.update(id,customer);
     }
 
     @DeleteMapping("/customers/{id}")

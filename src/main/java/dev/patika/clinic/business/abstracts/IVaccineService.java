@@ -11,7 +11,7 @@ public interface IVaccineService {
 
     Vaccine save(Vaccine vaccine);
 
-    Vaccine update(Vaccine vaccine);
+    Vaccine update(Long id,Vaccine vaccine);
 
     void delete(Long id);
 

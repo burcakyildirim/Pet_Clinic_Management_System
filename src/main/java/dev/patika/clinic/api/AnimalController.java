@@ -2,31 +2,19 @@ package dev.patika.clinic.api;
 
 import dev.patika.clinic.business.abstracts.IAnimalService;
 import dev.patika.clinic.dao.AnimalRepo;
-import dev.patika.clinic.dao.CustomerRepo;
-import dev.patika.clinic.dto.AnimalSaveRequest;
-import dev.patika.clinic.dto.AnimalSaveRespond;
-import dev.patika.clinic.dto.AnimalUpdateRequest;
 import dev.patika.clinic.entities.Animal;
-import dev.patika.clinic.entities.Customer;
-import jakarta.validation.Valid;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1")
 public class AnimalController {
     @Autowired
     private final IAnimalService animalService;
-
-    @Autowired
-    private ModelMapper modelMapper;
 
     @Autowired
     private AnimalRepo animalRepo;
@@ -38,31 +26,20 @@ public class AnimalController {
 
     @GetMapping("/animals")
     @ResponseStatus(HttpStatus.OK)
-    public List<AnimalSaveRespond> findAll() {
-        List<AnimalSaveRespond> animalSaveRespondList = this.animalService.findAll().stream().map(
-                animal -> this.modelMapper.map(animal,AnimalSaveRespond.class)
-        ).collect(Collectors.toList());
-        return animalSaveRespondList;
+    public List<Animal> findAll() {
+        return this.animalService.findAll();
     }
 
     @PostMapping("/animals")
     @ResponseStatus(HttpStatus.CREATED)
-    public Animal save(@RequestBody AnimalSaveRequest animalSaveRequest) {
-        Animal newAnimal = this.modelMapper.map(animalSaveRequest,Animal.class);
-        return this.animalService.save(newAnimal);
+    public Animal save(@RequestBody Animal animal) {
+        return this.animalService.save(animal);
     }
 
-    @PutMapping("/animals")
+    @PutMapping("/animals/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Animal update(@RequestBody AnimalUpdateRequest animalUpdateRequest) {
-        Animal updatedAnimal = this.animalService.getById(animalUpdateRequest.getId());
-        updatedAnimal.setName(animalUpdateRequest.getName());
-        updatedAnimal.setSpecies(animalUpdateRequest.getSpecies());
-        updatedAnimal.setBreed(animalUpdateRequest.getBreed());
-        updatedAnimal.setGender(animalUpdateRequest.getGender());
-        updatedAnimal.setColour(animalUpdateRequest.getColour());
-        updatedAnimal.setDate(animalUpdateRequest.getDate());
-        return this.animalService.update(updatedAnimal);
+    public Animal update(@PathVariable  Long id, @RequestBody Animal animal) {
+        return this.animalService.update(id,animal);
     }
 
     @DeleteMapping("/animals/{id}")

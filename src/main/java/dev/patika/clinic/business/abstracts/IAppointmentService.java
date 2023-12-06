@@ -14,7 +14,7 @@ public interface IAppointmentService {
 
     Appointment save(Appointment appointment);
 
-    Appointment update(Appointment appointment);
+    Appointment update(Long id,Appointment appointment);
 
     void delete(Long id);
 

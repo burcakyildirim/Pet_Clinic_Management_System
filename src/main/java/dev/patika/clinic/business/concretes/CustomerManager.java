@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerManager implements ICustomerService {
@@ -16,7 +17,8 @@ public class CustomerManager implements ICustomerService {
 
     @Override
     public Customer getById(Long id) {
-        return this.customerRepo.findById(id).orElseThrow();
+        return this.customerRepo.findById(id).orElseThrow(() ->
+                new RuntimeException(id + " id'li hayvan sahibi bulunamadı."));
     }
 
     @Override
@@ -25,14 +27,20 @@ public class CustomerManager implements ICustomerService {
     }
 
     @Override
-    public Customer update(Customer customer) {
+    public Customer update(Long id, Customer customer) {
+        Optional<Customer> customerFromDb = customerRepo.findById(id);
+
+        if(customerFromDb.isEmpty()) {
+            throw new RuntimeException(id + "Güncellemeye çalıştığınız hayvan sahibi sistemde bulunamadı!");
+        }
+        customer.setId(id);
         return this.customerRepo.save(customer);
     }
 
     @Override
     public void delete(Long id) {
         Customer c = customerRepo.findById(id).orElseThrow(() ->
-                new RuntimeException(id + " id'li müşteri bulunamadı!"));
+                new RuntimeException(id + " id'li hayvan sahibi sistemde bulunamadı!"));
         this.customerRepo.delete(this.getById(id));
     }
 

@@ -28,10 +28,10 @@ public class DoctorController {
         return this.doctorService.save(doctor);
     }
 
-    @PutMapping("/doctors")
+    @PutMapping("/doctors/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Doctor update(@RequestBody Doctor doctor) {
-        return this.doctorService.update(doctor);
+    public Doctor update(@PathVariable Long id, @RequestBody Doctor doctor) {
+        return this.doctorService.update(id,doctor);
     }
 
     @DeleteMapping("/doctors/{id}")

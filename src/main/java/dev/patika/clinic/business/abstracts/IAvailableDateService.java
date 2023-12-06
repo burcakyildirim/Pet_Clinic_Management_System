@@ -11,7 +11,7 @@ public interface IAvailableDateService {
 
     AvailableDate save(AvailableDate availableDate);
 
-    AvailableDate update(AvailableDate availableDate);
+    AvailableDate update(Long id,AvailableDate availableDate);
 
     void delete(Long id);
 

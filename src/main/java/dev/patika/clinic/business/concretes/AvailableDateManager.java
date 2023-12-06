@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AvailableDateManager implements IAvailableDateService {
@@ -16,7 +17,8 @@ public class AvailableDateManager implements IAvailableDateService {
 
     @Override
     public AvailableDate getById(Long id) {
-        return this.availableDateRepo.findById(id).orElseThrow();
+        return this.availableDateRepo.findById(id).orElseThrow(() ->
+                new RuntimeException(id + " id'li doktorun müsait gübü bulunamadı."));
     }
 
     @Override
@@ -25,14 +27,20 @@ public class AvailableDateManager implements IAvailableDateService {
     }
 
     @Override
-    public AvailableDate update(AvailableDate availableDate) {
+    public AvailableDate update(Long id, AvailableDate availableDate) {
+        Optional<AvailableDate> availableDateFromDb = availableDateRepo.findById(id);
+
+        if(availableDateFromDb.isEmpty()) {
+            throw new RuntimeException(id +"Güncellemeye çalıştığınız doktorun müsait günü sistemde bulunamadı!");
+        }
+        availableDate.setId(id);
         return this.availableDateRepo.save(availableDate);
     }
 
     @Override
     public void delete(Long id) {
         AvailableDate av = availableDateRepo.findById(id).orElseThrow(() ->
-                new RuntimeException(id + " id'li doktora ait uygun gün bulunamadı."));
+                new RuntimeException(id + " id'li doktora ait uygun gün sistemde bulunamadı."));
         this.availableDateRepo.delete(this.getById(id));
     }
 

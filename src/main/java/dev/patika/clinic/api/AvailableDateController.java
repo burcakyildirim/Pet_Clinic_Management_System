@@ -1,9 +1,6 @@
 package dev.patika.clinic.api;
 
 import dev.patika.clinic.business.abstracts.IAvailableDateService;
-import dev.patika.clinic.dto.AvailableDateRespond;
-import dev.patika.clinic.dto.AvailableDateSaveRequest;
-import dev.patika.clinic.dto.AvailableDateUpdateRequest;
 import dev.patika.clinic.entities.AvailableDate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1")
@@ -21,35 +17,26 @@ public class AvailableDateController {
     private final IAvailableDateService availableDateService;
 
     @Autowired
-    private ModelMapper modelMapper;
-
-    @Autowired
     public AvailableDateController(IAvailableDateService availableDateService) {
         this.availableDateService = availableDateService;
     }
 
     @GetMapping("/availabledates")
     @ResponseStatus(HttpStatus.OK)
-    public List<AvailableDateRespond> findAll() {
-        List<AvailableDateRespond> availableDateRespondList = this.availableDateService.findAll().stream().map(
-                availableDate -> this.modelMapper.map(availableDate,AvailableDateRespond.class)
-        ).collect(Collectors.toList());
-        return availableDateRespondList;
+    public List<AvailableDate> findAll() {
+        return this.availableDateService.findAll();
     }
 
     @PostMapping("/availabledates")
     @ResponseStatus(HttpStatus.CREATED)
-    public AvailableDate save(@RequestBody AvailableDateSaveRequest availableDateSaveRequest) {
-        AvailableDate newAvailableDate = this.modelMapper.map(availableDateSaveRequest,AvailableDate.class);
-        return this.availableDateService.save(newAvailableDate);
+    public AvailableDate save(@RequestBody AvailableDate availableDate) {
+        return this.availableDateService.save(availableDate);
     }
 
-    @PutMapping("/availabledates")
+    @PutMapping("/availabledates/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public AvailableDate update(@RequestBody AvailableDateUpdateRequest availableDateUpdateRequest) {
-        AvailableDate updatedAvailableDate = this.availableDateService.getById(availableDateUpdateRequest.getId());
-        updatedAvailableDate.setDate(availableDateUpdateRequest.getDate());
-        return this.availableDateService.update(updatedAvailableDate);
+    public AvailableDate update(@PathVariable Long id, @RequestBody AvailableDate availableDate) {
+        return this.availableDateService.update(id,availableDate);
     }
 
     @DeleteMapping("/availabledates/{id}")

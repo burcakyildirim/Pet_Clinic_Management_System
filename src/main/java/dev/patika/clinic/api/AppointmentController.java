@@ -4,21 +4,14 @@ import dev.patika.clinic.business.abstracts.IAnimalService;
 import dev.patika.clinic.business.abstracts.IAppointmentService;
 import dev.patika.clinic.dao.AppointmentRepo;
 import dev.patika.clinic.dao.DoctorRepo;
-import dev.patika.clinic.dto.AppointmentResponse;
-import dev.patika.clinic.dto.AppointmentUpdateRequest;
-import dev.patika.clinic.entities.Animal;
 import dev.patika.clinic.entities.Appointment;
-import dev.patika.clinic.entities.Doctor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1")
@@ -31,8 +24,6 @@ public class AppointmentController {
     private ModelMapper modelMapper;
     @Autowired
     private AppointmentRepo appointmentRepo;
-    @Autowired
-    private DoctorRepo doctorRepo;
 
 
     @Autowired
@@ -42,11 +33,8 @@ public class AppointmentController {
 
     @GetMapping("/appointments")
     @ResponseStatus(HttpStatus.OK)
-    public List<AppointmentResponse> findAll() {
-        List<AppointmentResponse> appointmentResponseList = this.appointmentService.findAll().stream().map(
-                appointment -> this.modelMapper.map(appointment,AppointmentResponse.class)
-        ).collect(Collectors.toList());
-        return appointmentResponseList;
+    public List<Appointment> findAll() {
+        return this.appointmentService.findAll();
     }
 
     @PostMapping("/appointments")
@@ -56,12 +44,10 @@ public class AppointmentController {
     }
 
 
-    @PutMapping("/appointments")
+    @PutMapping("/appointments/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Appointment update(@RequestBody AppointmentUpdateRequest appointmentUpdateRequest)  {
-        Appointment updatedAppointment = this.appointmentService.getById(appointmentUpdateRequest.getId());
-        updatedAppointment.setDateTime(updatedAppointment.getDateTime());
-        return this.appointmentService.update(updatedAppointment);
+    public Appointment update(@PathVariable Long id, @RequestBody Appointment appointment)  {
+        return  this.appointmentService.update(id,appointment);
     }
 
     @DeleteMapping("/appointments/{id}")
@@ -82,6 +68,6 @@ public class AppointmentController {
 
     @GetMapping("appointments/dateTime/doctorId")
     public ResponseEntity<List<Appointment>> getAppointmentsByDoctorId(@RequestParam LocalDateTime startDate, @RequestParam LocalDateTime endDate, @RequestParam Integer doctorId) {
-        return new ResponseEntity<List<Appointment>>(appointmentRepo.findByDateTimeBetweenAndAnimalId(startDate,endDate,doctorId),HttpStatus.OK);
+        return new ResponseEntity<List<Appointment>>(appointmentRepo.findByDateTimeBetweenAndDoctorId(startDate,endDate,doctorId),HttpStatus.OK);
     }
 }

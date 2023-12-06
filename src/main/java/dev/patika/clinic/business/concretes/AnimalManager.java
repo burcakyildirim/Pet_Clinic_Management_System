@@ -17,7 +17,8 @@ public class AnimalManager implements IAnimalService {
 
     @Override
     public Animal getById(Long id) {
-        return this.animalRepo.findById(id).orElseThrow();
+        return this.animalRepo.findById(id).orElseThrow(() ->
+                new RuntimeException(id + " id'li hayvan bulunamadı."));
     }
 
     @Override
@@ -26,14 +27,20 @@ public class AnimalManager implements IAnimalService {
     }
 
     @Override
-    public Animal update(Animal animal) {
+    public Animal update(Long id,Animal animal) {
+        Optional<Animal> animalFromDb = animalRepo.findById(id);
+
+        if(animalFromDb.isEmpty()) {
+            throw new RuntimeException(id + "Güncelleme çalıştığınız hayvan sistemde bulunamadı!");
+        }
+        animal.setId(id);
         return this.animalRepo.save(animal);
     }
 
     @Override
     public void delete(Long id) {
         Animal a = animalRepo.findById(id).orElseThrow(() ->
-        new RuntimeException(id + " id'li hayvan bulunamadı!"));
+        new RuntimeException(id + " id'li hayvan sistemde bulunamadı!"));
         this.animalRepo.delete(this.getById(id));
     }
 

@@ -23,7 +23,8 @@ public class VaccineManager implements IVaccineService {
 
     @Override
     public Vaccine getById(Long id) {
-        return this.vaccineRepo.findById(id).orElseThrow();
+        return this.vaccineRepo.findById(id).orElseThrow(() ->
+                new RuntimeException(id + " id'li aşı bulunamadı."));
     }
 
     @Override
@@ -41,14 +42,20 @@ public class VaccineManager implements IVaccineService {
         }
     }
     @Override
-    public Vaccine update(Vaccine vaccine) {
+    public Vaccine update(Long id,Vaccine vaccine) {
+        Optional<Vaccine> vaccineFromDb = vaccineRepo.findById(id);
+
+        if(vaccineFromDb.isEmpty()) {
+            throw new RuntimeException(id + "Güncellemeye çalıştığınız aşı sistemde bulunamadı!");
+        }
+        vaccine.setId(id);
         return this.vaccineRepo.save(vaccine);
     }
 
     @Override
     public void delete(Long id) {
         Vaccine v = vaccineRepo.findById(id).orElseThrow(() ->
-                new RuntimeException(id + " id'li aşı bulunamadı."));
+                new RuntimeException(id + " id'li aşı sistemde bulunamadı."));
         this.vaccineRepo.delete(this.getById(id));
     }
 

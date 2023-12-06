@@ -12,5 +12,6 @@ import java.util.Optional;
 
 @Repository
 public interface AvailableDateRepo extends JpaRepository<AvailableDate, Long> {
-    List<AvailableDate> findByDoctorIdAndDate(Integer doctorId, LocalDate date);
+    List<AvailableDate>  findByDoctorIdAndDate(Integer doctorId, LocalDate date);
+    boolean existsByDoctorIdAndDate(Integer doctorId, LocalDate date);
 }

@@ -10,7 +10,7 @@ public interface IAnimalService {
 
     Animal save(Animal animal);
 
-    Animal update(Animal animal);
+    Animal update(Long id, Animal animal);
 
     void delete(Long id);
 
