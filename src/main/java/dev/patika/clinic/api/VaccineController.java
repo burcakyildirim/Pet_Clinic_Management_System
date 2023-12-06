@@ -50,9 +50,8 @@ public class VaccineController {
 
     @PostMapping("/vaccines")
     @ResponseStatus(HttpStatus.CREATED)
-    public Vaccine save(@RequestBody VaccineSaveRequest vaccineSaveRequest) {
-        Vaccine newVaccine = this.modelMapper.map(vaccineSaveRequest,Vaccine.class);
-        return this.vaccineService.save(newVaccine);
+    public Vaccine save(@RequestBody Vaccine vaccine) {
+        return this.vaccineService.save(vaccine);
     }
 
     @PutMapping("/vaccines")

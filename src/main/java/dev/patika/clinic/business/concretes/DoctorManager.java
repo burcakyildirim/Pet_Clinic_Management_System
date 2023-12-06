@@ -31,6 +31,8 @@ public class DoctorManager implements IDoctorService {
 
     @Override
     public void delete(Long id) {
+        Doctor d = doctorRepo.findById(id).orElseThrow(() ->
+                new RuntimeException(id + " id'li doktor bulunamadı!"));
         this.doctorRepo.delete(this.getById(id));
     }
 

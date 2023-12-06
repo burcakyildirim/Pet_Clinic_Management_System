@@ -3,8 +3,8 @@ package dev.patika.clinic.api;
 import dev.patika.clinic.business.abstracts.IAnimalService;
 import dev.patika.clinic.business.abstracts.IAppointmentService;
 import dev.patika.clinic.dao.AppointmentRepo;
+import dev.patika.clinic.dao.DoctorRepo;
 import dev.patika.clinic.dto.AppointmentResponse;
-import dev.patika.clinic.dto.AppointmentSaveRequest;
 import dev.patika.clinic.dto.AppointmentUpdateRequest;
 import dev.patika.clinic.entities.Animal;
 import dev.patika.clinic.entities.Appointment;
@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +31,8 @@ public class AppointmentController {
     private ModelMapper modelMapper;
     @Autowired
     private AppointmentRepo appointmentRepo;
+    @Autowired
+    private DoctorRepo doctorRepo;
 
 
     @Autowired
@@ -48,10 +51,10 @@ public class AppointmentController {
 
     @PostMapping("/appointments")
     @ResponseStatus(HttpStatus.CREATED)
-    public Appointment save(@RequestBody AppointmentSaveRequest appointmentSaveRequest) {
-        Appointment newAppointment = this.modelMapper.map(appointmentSaveRequest,Appointment.class);
-        return this.appointmentService.save(newAppointment);
+    public Appointment save(@RequestBody Appointment appointment) {
+        return this.appointmentService.save(appointment);
     }
+
 
     @PutMapping("/appointments")
     @ResponseStatus(HttpStatus.OK)

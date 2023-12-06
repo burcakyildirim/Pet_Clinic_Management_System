@@ -31,6 +31,8 @@ public class CustomerManager implements ICustomerService {
 
     @Override
     public void delete(Long id) {
+        Customer c = customerRepo.findById(id).orElseThrow(() ->
+                new RuntimeException(id + " id'li müşteri bulunamadı!"));
         this.customerRepo.delete(this.getById(id));
     }
 

@@ -32,6 +32,8 @@ public class AnimalManager implements IAnimalService {
 
     @Override
     public void delete(Long id) {
+        Animal a = animalRepo.findById(id).orElseThrow(() ->
+        new RuntimeException(id + " id'li hayvan bulunamadı!"));
         this.animalRepo.delete(this.getById(id));
     }
 

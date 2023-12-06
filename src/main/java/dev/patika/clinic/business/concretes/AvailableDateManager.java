@@ -31,6 +31,8 @@ public class AvailableDateManager implements IAvailableDateService {
 
     @Override
     public void delete(Long id) {
+        AvailableDate av = availableDateRepo.findById(id).orElseThrow(() ->
+                new RuntimeException(id + " id'li doktora ait uygun gün bulunamadı."));
         this.availableDateRepo.delete(this.getById(id));
     }
 

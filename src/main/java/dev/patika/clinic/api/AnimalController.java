@@ -80,4 +80,9 @@ public class AnimalController {
     public ResponseEntity<List<Animal>> getAnimalByName(@RequestParam String name) {
         return new ResponseEntity<List<Animal>>(animalRepo.findByName(name),HttpStatus.OK);
     }
+
+    @GetMapping("/animals/customerId")
+    public ResponseEntity<List<Animal>> getAnimalsByCustomerId(@RequestParam Integer customerId) {
+        return new ResponseEntity<List<Animal>>(animalRepo.findByCustomerId(customerId),HttpStatus.OK);
+    }
 }
