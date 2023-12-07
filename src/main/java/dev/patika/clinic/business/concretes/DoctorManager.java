@@ -16,17 +16,20 @@ public class DoctorManager implements IDoctorService {
     @Autowired
     private DoctorRepo doctorRepo;
 
+    //ID'ye göre doktor getirme işlemi
     @Override
     public Doctor getById(Long id) {
         return this.doctorRepo.findById(id).orElseThrow(() ->
                 new RuntimeException(id + " id'li doktor bulunamadı."));
     }
 
+    //Değerlendirme Formu 12(Doktor kaydetme işlemi)
     @Override
     public Doctor save(Doctor doctor) {
         return this.doctorRepo.save(doctor);
     }
 
+    //Sistemdeki doktorları güncelleme işlemi
     @Override
     public Doctor update(Long id,Doctor doctor) {
         Optional<Doctor> doctorFromDb = doctorRepo.findById(id);
@@ -38,6 +41,7 @@ public class DoctorManager implements IDoctorService {
         return this.doctorRepo.save(doctor);
     }
 
+    //Sistemdeki doktorları silme işlemi
     @Override
     public void delete(Long id) {
         Doctor d = doctorRepo.findById(id).orElseThrow(() ->
@@ -45,6 +49,7 @@ public class DoctorManager implements IDoctorService {
         this.doctorRepo.delete(this.getById(id));
     }
 
+    //Sistemdeki tüm doktorları getiren işlem
     @Override
     public List<Doctor> findAll() {
         return this.doctorRepo.findAll();

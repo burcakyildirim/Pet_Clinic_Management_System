@@ -61,11 +61,14 @@ public class AppointmentController {
         return this.appointmentService.getById(id);
     }
 
+
+    //Değerlendirme Formu 23(Randevuları girilen tarih aralığına ve hayvana göre getirme işlemi)
     @GetMapping("appointments/dateTime")
     public ResponseEntity<List<Appointment>> getAppointmentsByAnimalId (@RequestParam LocalDateTime startDate, @RequestParam LocalDateTime endDate, @RequestParam Integer animalId) {
         return new ResponseEntity<List<Appointment>>(appointmentRepo.findByDateTimeBetweenAndAnimalId(startDate, endDate, animalId),HttpStatus.OK);
     }
 
+    //Değerlendirme Formu 24(Randevuları girilen tarih aralığına ve doktora göre getirme işlemi)
     @GetMapping("appointments/dateTime/doctorId")
     public ResponseEntity<List<Appointment>> getAppointmentsByDoctorId(@RequestParam LocalDateTime startDate, @RequestParam LocalDateTime endDate, @RequestParam Integer doctorId) {
         return new ResponseEntity<List<Appointment>>(appointmentRepo.findByDateTimeBetweenAndDoctorId(startDate,endDate,doctorId),HttpStatus.OK);

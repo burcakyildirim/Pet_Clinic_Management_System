@@ -27,17 +27,20 @@ public class AppointmentManager implements IAppointmentService {
     @Autowired
     private AvailableDateRepo availableDateRepo;
 
+    //Sistemdeki randevuları ID'ye göre getirme işlemi
     @Override
     public Appointment getById(Long id) {
         return this.appointmentRepo.findById(id).orElseThrow(()->
         new RuntimeException(id + " id'li randevu bulunamadı."));
     }
 
+    //Değerlendirme Formu 14(Randevu kaydetme işlemi)
     @Override
     public Appointment save(Appointment appointment) {
         LocalDateTime dateTime = appointment.getDateTime();
         Integer doctorId = Math.toIntExact(appointment.getDoctor().getId());
 
+        //Değerlendirme Formu 22 (Önce müsait gün kontrolü sonra varsa boş saatin kontrolünü yapan işlem)
         List<AvailableDate> availableDateList= availableDateRepo.findByDoctorIdAndDate(doctorId, dateTime.toLocalDate());
         if(availableDateList != null && isAvailableDateExistOnDate(doctorId, dateTime.toLocalDate())) {
             throw new RuntimeException("Doktorun bugün de müsait günü yoktur.");
@@ -49,13 +52,19 @@ public class AppointmentManager implements IAppointmentService {
         }
     }
 
+    //Doktorun müsait gününde o saatte başka bir randevusu var mı kontrolü
     private boolean isAppointmentExistOnDate(Integer doctorId, LocalDateTime dateTime) {
         return appointmentRepo.existsByDoctorIdAndDateTime(doctorId, dateTime);
     }
+
+    //Doktorun müsait günü var mı  kontrolü
     private boolean isAvailableDateExistOnDate(Integer doctorId, LocalDate date) {
         return !availableDateRepo.existsByDoctorIdAndDate(doctorId,date);
     }
+//------------------------------------Randevu kaydetme işlemi bitiş --------------------------
 
+
+    //Randevuları güncelleme işlemi
     @Override
     public Appointment update(Long id,Appointment appointment) {
         Optional<Appointment> appointmentFromDb = appointmentRepo.findById(id);
@@ -67,6 +76,7 @@ public class AppointmentManager implements IAppointmentService {
         return this.appointmentRepo.save(appointment);
     }
 
+    //Randevuları silme işlemi
     @Override
     public void delete(Long id) {
         Appointment ap = appointmentRepo.findById(id).orElseThrow(() ->
@@ -74,6 +84,7 @@ public class AppointmentManager implements IAppointmentService {
         this.appointmentRepo.delete(this.getById(id));
     }
 
+    //Sistemdeki randevuların hepsini getiren işlem
     @Override
     public List<Appointment> findAll() {
         return this.appointmentRepo.findAll();

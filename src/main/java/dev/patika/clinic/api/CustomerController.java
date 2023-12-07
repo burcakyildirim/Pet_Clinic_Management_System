@@ -52,6 +52,8 @@ public class CustomerController {
         return this.customerService.getById(id);
     }
 
+
+    //Değerlendirme Formu 17 (Hayvan sahiplerinin isme göre filtrelenişi)
     @GetMapping("/customers/name")
     public ResponseEntity<List<Customer>> getCustomerByName(@RequestParam String name) {
         return new ResponseEntity<List<Customer>>(customerRepo.findByName(name),HttpStatus.OK);

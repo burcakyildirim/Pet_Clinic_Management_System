@@ -15,17 +15,20 @@ public class AnimalManager implements IAnimalService {
     @Autowired
     private AnimalRepo animalRepo;
 
+    //ID'ye göre hayvanları getirme işlemi
     @Override
     public Animal getById(Long id) {
         return this.animalRepo.findById(id).orElseThrow(() ->
                 new RuntimeException(id + " id'li hayvan bulunamadı."));
     }
 
+    //Değerlendirme Formu 11(Sisteme hayvanları kaydetme işlemi)
     @Override
     public Animal save(Animal animal) {
         return this.animalRepo.save(animal);
     }
 
+    //Sistemdeki hayvanları güncelleme işlemi
     @Override
     public Animal update(Long id,Animal animal) {
         Optional<Animal> animalFromDb = animalRepo.findById(id);
@@ -37,6 +40,7 @@ public class AnimalManager implements IAnimalService {
         return this.animalRepo.save(animal);
     }
 
+    //Hayvanları silme işlemi
     @Override
     public void delete(Long id) {
         Animal a = animalRepo.findById(id).orElseThrow(() ->
@@ -44,6 +48,7 @@ public class AnimalManager implements IAnimalService {
         this.animalRepo.delete(this.getById(id));
     }
 
+    //Sistemdeki tüm hayvanları getiren işlem
     @Override
     public List<Animal> findAll() {
         return this.animalRepo.findAll();

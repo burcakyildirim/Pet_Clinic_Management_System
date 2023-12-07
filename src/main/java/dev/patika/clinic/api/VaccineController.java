@@ -54,11 +54,13 @@ public class VaccineController {
         return this.vaccineService.getById(id);
     }
 
+    //Değerlendirme Formu 20 (Sadece bir hayvanın tüm aşı kayıtlarını getiren işlem)
     @GetMapping("/vaccines/animalId")
     public ResponseEntity<List<Vaccine>> getVaccinesByAnimalId(@RequestParam Integer animalId) {
         return new ResponseEntity<List<Vaccine>>(vaccineRepo.findByAnimalId(animalId),HttpStatus.OK);
     }
 
+    //Değerlendirme Formu 21 (Aşı koruyuculuk bitiş tarihi yaklaşan hayvanları getiren işlem)
     @GetMapping("/vaccines/finishDate")
     public ResponseEntity<List<Vaccine>> getVaccinesByFinishDate(@RequestParam LocalDate startDate, @RequestParam  LocalDate endDate) {
         return new ResponseEntity<List<Vaccine>>(vaccineRepo.findByFinishDateBetween(startDate, endDate),HttpStatus.OK);

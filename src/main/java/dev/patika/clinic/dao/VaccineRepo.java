@@ -13,8 +13,14 @@ import java.util.Optional;
 
 @Repository
 public interface VaccineRepo extends JpaRepository<Vaccine, Long> {
+
+    //Sadece bir hayvanın tüm aşı kayıtlarını getirmek için kullanılan query
     List<Vaccine> findByAnimalId(Integer animalId);
+
+    // Aşı koruyuculuk bitiş tarihi yaklaşan hayvanları filtrelemek için kullanılan query
     List<Vaccine> findByFinishDateBetween(LocalDate startDate, LocalDate endDate);
+
+    //Yeni aşı kaydetme işleminde koruyuculuk bitiş tarihi kontrolü yapmak için kullanılan query
     List<Vaccine> findAllByAnimalIdAndCodeAndFinishDateAfter(Integer animalId,String code,LocalDate startDate);
 
 }

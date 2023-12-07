@@ -11,7 +11,11 @@ import java.util.Optional;
 
 @Repository
 public interface AnimalRepo extends JpaRepository<Animal, Long> {
+
+    //Hayvanları isme göre filtreleyen query
     List<Animal> findByName(String name);
 
+
+    //(Sadece bir hayvan sahibine ait tüm hayvanları filtreleyen query
     List<Animal> findByCustomerId(Integer customerId);
 }

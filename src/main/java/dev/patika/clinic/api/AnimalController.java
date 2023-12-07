@@ -53,11 +53,14 @@ public class AnimalController {
         return this.animalService.getById(id);
     }
 
+
+    //Değerlendirme Formu 16 (Hayvanları isme göre filtreleme)
     @GetMapping("/animals/name")
     public ResponseEntity<List<Animal>> getAnimalByName(@RequestParam String name) {
         return new ResponseEntity<List<Animal>>(animalRepo.findByName(name),HttpStatus.OK);
     }
 
+    //Değerlendirme Formu 18 (Sadece bir hayvan sahibine ait tüm hayvanları getiren işlem)
     @GetMapping("/animals/customerId")
     public ResponseEntity<List<Animal>> getAnimalsByCustomerId(@RequestParam Integer customerId) {
         return new ResponseEntity<List<Animal>>(animalRepo.findByCustomerId(customerId),HttpStatus.OK);

@@ -21,18 +21,21 @@ public class VaccineManager implements IVaccineService {
     @Autowired
     private VaccineRepo vaccineRepo;
 
+    //Aşıları ID'ye göre getirme işlemi
     @Override
     public Vaccine getById(Long id) {
         return this.vaccineRepo.findById(id).orElseThrow(() ->
                 new RuntimeException(id + " id'li aşı bulunamadı."));
     }
 
+    //Değerlendirme Formu 15(Hayvanların aşılarını sisteme işleme metodu)
     @Override
         public Vaccine save(Vaccine vaccine) {
         String code = vaccine.getCode();
         Integer animalId = Math.toIntExact(vaccine.getAnimal().getId());
         LocalDate startDate = vaccine.getStartDate();
 
+        //Değerlendirme Formu 19 (Yeni aşı kaydetme işleminde koruyuculuk bitiş tarihi kontrolü yapan işlem)
         List<Vaccine> vaccineList = vaccineRepo.findAllByAnimalIdAndCodeAndFinishDateAfter(animalId,code,startDate);
 
         if(!vaccineList.isEmpty()) {
@@ -41,6 +44,10 @@ public class VaccineManager implements IVaccineService {
             return this.vaccineRepo.save(vaccine);
         }
     }
+    //--------------------------------Kayıt İşlemi Bitiş-------------------------------------
+
+
+    //Hayvanlara ait aşıları güncelleme işlemi
     @Override
     public Vaccine update(Long id,Vaccine vaccine) {
         Optional<Vaccine> vaccineFromDb = vaccineRepo.findById(id);
@@ -52,6 +59,7 @@ public class VaccineManager implements IVaccineService {
         return this.vaccineRepo.save(vaccine);
     }
 
+    //Hayvanlara ait aşıları silme işlemi
     @Override
     public void delete(Long id) {
         Vaccine v = vaccineRepo.findById(id).orElseThrow(() ->
@@ -59,6 +67,7 @@ public class VaccineManager implements IVaccineService {
         this.vaccineRepo.delete(this.getById(id));
     }
 
+    //Tüm hayvanlara ait tüm aşıları getirme işlemi
     @Override
     public List<Vaccine> findAll() {
         return this.vaccineRepo.findAll();
