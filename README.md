@@ -1,4 +1,8 @@
 # Pet Clinic
+
+With the veterinary management system project, I wrote an API through which a veterinary clinic can manage its own business.
+
+
 ![ClinicUML](PetClinic.png)
 
 # Animal
